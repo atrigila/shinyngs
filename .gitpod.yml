@@ -1,0 +1,20 @@
+image: rocker/tidyverse:4.3.1
+
+ports:
+  - port: 8787
+    onOpen: open-preview
+
+env:
+  R_LIBS: /workspace/R/library
+  R_LIBS_USER: /workspace/R/library
+  GITHUB_PAT: ${GITHUB_TOKEN}
+
+tasks:
+  - init: |
+      mkdir -p "$R_LIBS"
+      echo 'export R_LIBS=/workspace/R/library' >> ~/.bashrc
+      echo 'export R_LIBS_USER=/workspace/R/library' >> ~/.bashrc
+      echo 'R_LIBS=/workspace/R/library' >> ~/.Renviron
+      echo 'R_LIBS_USER=/workspace/R/library' >> ~/.Renviron
+      Rscript -e 'install.packages(c("optparse","remotes"), repos="https://cloud.r-project.org")'
+      Rscript -e 'remotes::install_github("pinin4fjords/shinyngs")'
